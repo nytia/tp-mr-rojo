@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script type="text/javascript">
+        window.addEventListener("load", function () {
+            var xhr;
+            var regsel=document.getElementById('regsel');
+            try {  xhr = new ActiveXObject('Msxml2.XMLHTTP');   }
+            catch (e)
+            {
+                try {   xhr = new ActiveXObject('Microsoft.XMLHTTP'); }
+                catch (e2)
+                {
+                    try {  xhr = new XMLHttpRequest();  }
+                    catch (e3) {  xhr = false;   }
+                }
+            }
+
+            xhr.onreadystatechange  = function()
+            {
+                if(xhr.readyState  == 4){
+                    if(xhr.status  == 200) {
+                        var retour = JSON.parse(xhr.responseText);
+                        // for(let i=0;i<retour.length;i++){
+                            /*let region=Object.values(retour[i]);
+                            let opt=document.createElement('option');
+                            opt.value=region[0];
+                            opt.name=region[1];
+                            regsel.appendChild(opt);*/
+                           // let avions = Object.values(retour[i]);
+                            console.log(retour);
+
+                        // }
+                    } else {
+                        document.dyn="Error code " + xhr.status;
+                    }
+                }
+            };
+            // Liez l'objet FormData et l'élément form
+            var form=document.getElementById("idform");
+            var formData = new FormData(form);
+
+            // Définissez ce qui se passe si la soumission s'est opérée avec succès
+            xhr.addEventListener("load", function(event) {
+                window.location.href="index.html";
+            });
+
+            // Definissez ce qui se passe en cas d'erreur
+            xhr.addEventListener("error", function(event) {
+                alert('Oups! Quelque chose s\'est mal passé.');
+            });
+
+            // Configurez la requête
+            xhr.open("GET", "http://localhost:8080/avions",true);
+
+            xhr.setRequestHeader('Content-Type','application/json');
+
+            // Les données envoyées sont ce que l'utilisateur a mis dans le formulaire
+            xhr.send(null);
+        });
+    </script>
+</head>
+<body>
+<form id="idform">
+    <select name="regsel" id="">
+        <option value="">Selectionner</option>
+    </select>
+</form>
+</body>
+</html>
